@@ -90,7 +90,7 @@
               if (json.user_vacation != undefined) {
                 $('#vdays_table tbody').html("");
                 for(var i=0;i<json.user_vacation.length;i++) {
-                    var row = "<tr><td>" + json.user_vacation[i].vstart + "</td><td>" + json.user_vacation[i].vend + "</td><td>" + + "</td></tr>";
+                    var row = "<tr><td>" + json.user_vacation[i].vstart + "</td><td>" + json.user_vacation[i].vend + "</td><td>" + "<a href='javascript:removeVacation(" + json.user_vacation[i].id+ ");'>Remove</a>"+ "</td></tr>";
                     $('#vdays_table tbody').append(row);
                 }
               }
@@ -101,6 +101,7 @@
   $('#add_user_button').click(function() {
     var first_name = $('#first_name_input').val();
     var last_name = $('#last_name_input').val();
+    var start_date = $('#start_date_input').val();
     $.ajax({
             url:'/main/add_user',
             data:{'first_name': first_name,
@@ -145,4 +146,14 @@
             }
           })
    });
+   //Remove vacation day
+  function removeVacation(id) {
+    $.ajax({
+            url:'/main/remove_vacation_day',
+            data:{'id': id},
+            success: function(data) {
+              $('#user_id').;
+            }
+          });
+  }
 </script>

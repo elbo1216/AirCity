@@ -46,6 +46,7 @@ class MainController < ApplicationController
     user = User.new
     user.last_name = params['last_name']
     user.first_name = params['first_name']
+    user.start_date = params['start_date']
     ret_val = 'SUCCESS'
     ret_val = 'ERROR: First and Last name must not be blank' if user.last_name.blank? || user.first_name.blank?
     user.save! if ret_val == 'SUCCESS'
@@ -59,4 +60,10 @@ class MainController < ApplicationController
 
     render :nothing => true
   end 
+
+  def remove_vacation_day
+    id = params['id']
+    UserVacation.find(id).delete
+    render :nothing => true
+  end
 end
