@@ -1,0 +1,148 @@
+<div id='main_index'>
+  <div id='add_employee' class='add_employee'>
+    <span class='label'>First Name:</span><input id='first_name_input' name='first_name' type=text/>
+    <span class='label'>Last Name:</span><input id='last_name_input' name='last_name' type=text/>
+    <span class='label'>Start Date:</span><input id='start_date_input' name='last_name' type=text/>
+    <input id='add_user_button' type='button' value='Add User'/>
+  </div>
+  <div id='left_container' class='container_divs'>
+    <div id='select_container' class='select_containers'>
+      <table id='data_selection_table'>
+        <tbody>
+          <tr>
+            <td class='label'>Employee:</td>
+            <td><%= select_tag 'user_id', options_for_select(@user_list) -%></td>
+          </tr>
+          <tr>
+            <td class='label'>Year:</td>
+            <td><%= select_tag 'year', options_for_select(@year_list) -%></td>
+          </tr>
+          <tr>
+            <td colspan=2><button id='delete_user_button'>Remove User</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id='calendar_container'>
+      <table>
+        <tbody>
+          <tr>
+            <td>Vacation Start Date: </td>
+            <td><input id='start_calendar' type='text' name='start_date' /></td>
+          </tr>
+          <tr>
+            <td>Vacation End Date:</td>
+            <td><input id='end_calendar' type='text' name='end_date'/></td>
+          </tr>
+          <tr>
+            <td colspan=2><button id='add_vacation_button'>Add Vacation Days</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id='right_container' class='container_divs'>
+    <div id='stats_container'>
+      Total Vacation Remaining: <span id='days_remaining'></span>
+      <br/>
+      Total Vacation Taken: <span id='days_taken'></span>
+  
+      <br/>
+      <br/>
+      <span class='title'>Vacation Days</table>
+      <table id='vdays_table' class='data_table'>
+        <thead>
+          <th>Vacation Start Date</th>
+          <th>Vacation End Date</th>
+          <th>Remove Date</th>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+  $(function() {
+    $('#start_calendar').datepicker({
+        showOn: "button",
+			     buttonImage: "/images/calendar.gif",
+        dateFormat: 'yy-mm-dd',
+			     buttonImageOnly: true
+     });
+    $('#end_calendar').datepicker({
+        showOn: "button",
+			     buttonImage: "/images/calendar.gif",
+        dateFormat: 'yy-mm-dd',
+			     buttonImageOnly: true
+     });
+   });
+
+  $('#user_id').change(function() {
+    var year = $('#year').val();
+    $.ajax({
+            url:'/main/get_vacation_days',
+            data:{'year' : year, 'user_id' : $(this).val()},
+            success: function(data) {
+              json = $.parseJSON(data)
+              $('#days_taken').html(json['days_used']);
+              $('#days_remaining').html(json['days_left']);
+              if (json.user_vacation != undefined) {
+                $('#vdays_table tbody').html("");
+                for(var i=0;i<json.user_vacation.length;i++) {
+                    var row = "<tr><td>" + json.user_vacation[i].vstart + "</td><td>" + json.user_vacation[i].vend + "</td><td>" + + "</td></tr>";
+                    $('#vdays_table tbody').append(row);
+                }
+              }
+            }
+          })
+  });
+  // Add User
+  $('#add_user_button').click(function() {
+    var first_name = $('#first_name_input').val();
+    var last_name = $('#last_name_input').val();
+    $.ajax({
+            url:'/main/add_user',
+            data:{'first_name': first_name,
+                  'last_name': last_name,
+                  'start_date': start_date},
+            success: function(data) {
+              if (data != 'SUCCESS') {
+                alert(data);
+              } else {
+                window.location.reload(true);
+              }
+            }
+          })
+  });
+  //Remove User
+  $('#delete_user_button').click(function() {
+    var user_id = $('#user_id').val();
+    $.ajax({
+            url:'/main/remove_user',
+            data:{'user_id': user_id},
+            success: function(data) {
+              window.location.reload(true);
+            }
+          })
+  });
+  $('#add_vacation_button').click(function() {
+    var start_date = $('#start_calendar').val()
+    var end_date = $('#end_calendar').val()
+    var user_id = $('#user_id').val();
+    $.ajax({
+            url:'/main/add_vacation_days',
+            data:{'vstart': start_date,
+                  'vend': end_date,
+                  'user_id': user_id},
+            success: function(data) {
+              if (data != 'SUCCESS') {
+                alert(data);
+              } else {
+                window.location.reload(true);
+              }
+              
+            }
+          })
+   });
+</script>

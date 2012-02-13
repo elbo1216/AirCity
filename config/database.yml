@@ -1,20 +1,20 @@
 development:
-  adapter: postgresql
-  database: db1
-  username: uid
-  password: pwd
+  adapter: mysql
+  database: esquare6_db1
+  username: esquare6_echung
+  password: esec28a
   host: localhost
 
 test:
-  adapter: postgresql
-  database: db1
-  username: uid
-  password: pwd
+  adapter: mysql
+  database: esquare6_db1
+  username: esquare6_echung
+  password: esec28a
   host: localhost
 
 production:
-  adapter: postgresql
-  database: db1
-  username: uid
-  password: pwd
+  adapter: mysql
+  database: esquare6_db1
+  username: esquare6_echung
+  password: esec28a
   host: localhost

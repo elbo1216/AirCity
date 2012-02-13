@@ -1,0 +1,19 @@
+<html xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <meta http_equiv='Content_Type' content='text/html; charset=utf_8' />
+    <title>AirCity Administrative Tools</title>
+      <%= stylesheet_link_tag 'cupertino/jquery-ui-1.8.17.custom' %>
+      <%= stylesheet_link_tag 'cupertino/jquery.ui.button' %>
+      <%= stylesheet_link_tag 'main' %>
+
+      <%= javascript_include_tag 'jquery-1.7.1.min' %>
+      <%= javascript_include_tag 'jquery-ui-1.8.17.custom.min' %>
+      <%= javascript_include_tag 'jquery.ui.widget' %>
+      <%= javascript_include_tag 'jquery.ui.button' %>
+  </head>
+  </body>
+    <div id='main_content'>
+      <%= yield -%>
+    </div>
+  </body>
+</html>

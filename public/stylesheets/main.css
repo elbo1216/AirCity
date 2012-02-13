@@ -1,0 +1,53 @@
+body, td {
+  font-size: 14px;
+}
+
+.clear {
+  clear:both;
+}
+
+.label {
+  font-style:italic;
+  margin: 0px 10px 0px 0px;
+}
+
+.container_divs {
+  float:left;
+  margin: 10px 40px 0px 40px;
+}
+
+.calendar_divs {
+  float:left;
+  margin: 0px 0px 0px 100px;
+}
+
+.select_containers {
+  margin: 0px 0px 20px 0px;
+}
+
+.add_employee {
+  padding: 10px 0px 20px 40px;
+  border-bottom:solid 2px gray;
+}
+
+.add_employee input {
+  margin:0px 10px 0px 0px;
+}
+
+.title {
+  font-size:16px;
+  font-weight:bold;
+}
+
+.data_table th {
+  border:1px solid gray;
+  background-color: #C4C4C4;
+  font-size: 12px;
+  font-style:italic;
+  padding:3px;
+}
+
+.data_table td {
+  border:1px solid gray;
+  padding:3px;
+}
