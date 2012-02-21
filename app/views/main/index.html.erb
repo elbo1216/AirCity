@@ -1,4 +1,7 @@
 <div id='main_index'>
+  <div id='logo_container' class='logo_container'>
+    <img src='images/aircity_logo.png'/>
+  </div>
   <div id='add_employee' class='add_employee'>
     <span class='label'>First Name:</span><input id='first_name_input' name='first_name' type=text/>
     <span class='label'>Last Name:</span><input id='last_name_input' name='last_name' type=text/>
@@ -18,7 +21,7 @@
             <td><%= select_tag 'year', options_for_select(@year_list) -%></td>
           </tr>
           <tr>
-            <td colspan=2><button id='delete_user_button'>Remove User</button></td>
+            <td colspan=2><input type='button' id='delete_user_button' value='Remove User' /> </td>
           </tr>
         </tbody>
       </table>
@@ -27,15 +30,15 @@
       <table>
         <tbody>
           <tr>
-            <td>Vacation Start Date: </td>
+            <td class='label'>Vacation Start Date: </td>
             <td><input id='start_calendar' type='text' name='start_date' /></td>
           </tr>
           <tr>
-            <td>Vacation End Date:</td>
+            <td class='label'>Vacation End Date:</td>
             <td><input id='end_calendar' type='text' name='end_date'/></td>
           </tr>
           <tr>
-            <td colspan=2><button id='add_vacation_button'>Add Vacation Days</button></td>
+            <td colspan=2><input type='button' id='add_vacation_button' value='Add Vacation Days'</td>
           </tr>
         </tbody>
       </table>
@@ -152,8 +155,31 @@
             url:'/main/remove_vacation_day',
             data:{'id': id},
             success: function(data) {
-              $('#user_id').;
+              $('#user_id').change();
             }
           });
   }
+  //Styling
+  $(':button').each(function() {
+     $(this)
+       .addClass("ui-button ui-state-default ui-corner-all ui-button-text-only")
+       .hover(
+	          function(){ 
+		           $(this).addClass("ui-state-hover"); 
+        	  },
+    	      function(){ 
+    		       $(this).removeClass("ui-state-hover"); 
+           }
+       )
+       .mousedown(function() { 
+		       $(this).addClass("ui-state-active"); 
+    	  })
+	      .mouseup(function(){ 
+		       $(this).removeClass("ui-state-active"); 
+    	  });
+   });
+ var doc_height = $(document).height() - $('#add_employee').height() - 55;
+ $('#left_container')
+    .css('border-right', 'solid 2px gray')
+    .height(doc_height);
 </script>

@@ -1,5 +1,11 @@
 body, td {
   font-size: 14px;
+  margin: 0px;
+}
+
+.logo_container {
+  float:left;
+  margin:0px 10px 0px 0px;
 }
 
 .clear {
@@ -13,7 +19,7 @@ body, td {
 
 .container_divs {
   float:left;
-  margin: 10px 40px 0px 40px;
+  padding: 10px 30px 0px 30px;
 }
 
 .calendar_divs {
@@ -40,14 +46,15 @@ body, td {
 }
 
 .data_table th {
-  border:1px solid gray;
-  background-color: #C4C4C4;
+  border:1px solid #0070a3;
+  background-color: #d7ebf9;
+  color: #0070a3;
   font-size: 12px;
   font-style:italic;
   padding:3px;
 }
 
 .data_table td {
-  border:1px solid gray;
+  border:1px solid #0070a3;
   padding:3px;
 }
