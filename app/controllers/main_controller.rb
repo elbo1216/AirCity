@@ -14,7 +14,7 @@ class MainController < ApplicationController
   def get_vacation_days
     uv = UserVacation.find(:all, :conditions => ['user_id = ? and year(vacation_start) = ?',params['user_id'], params['year']])
     days_used = uv.map { |u| (u.vacation_end - u.vacation_start).to_i }.sum
-    days_left = VACA_DAYS_PER_YEAR - days_used
+    days_left = uv.first.user.total_days - days_used
     @user_data = {}
     uv.each do |row|
       @user_data["user_vacation"] = [] unless @user_data["user_vacation"]
