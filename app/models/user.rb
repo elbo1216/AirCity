@@ -2,6 +2,6 @@ class User < ActiveRecord::Base
   has_many :user_vacations
 
   def total_days
-    (Time.now - start_date)/31536000 > 5 ? 23 : 19
+    (Date.parse(Time.now.to_s) - Date.parse(start_date)).to_i/365 > 5 ? 23 : 19
   end
 end
