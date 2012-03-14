@@ -1,0 +1,125 @@
+<% @title="Aircity Vacation Tracker" -%>
+<div id='main_index'>
+  <div id='select_employee' class='select_employee'>
+    <span class='label'>Employee:</span>
+    <span><%= select_tag 'user_id', options_for_select(@user_list) -%></span>
+    <span class='label'>Year:</span>
+    <span><%= select_tag 'year', options_for_select(@year_list) -%></span>
+  </div>
+  <div id='left_container' class='container_divs'>
+    <div id='calendar_container'>
+      <table>
+        <tbody>
+          <tr>
+            <td class='label'>Vacation Start Date: </td>
+            <td><input id='start_calendar' type='text' name='start_date' /></td>
+          </tr>
+          <tr>
+            <td class='label'>Vacation End Date:</td>
+            <td><input id='end_calendar' type='text' name='end_date'/></td>
+          </tr>
+          <tr>
+            <td class='label'>Half Day? <br/>(Check if only half day is taken):</td>
+            <td><input id='half_day_cb' type='checkbox' name='half_day_cb'/></td>
+          </tr>
+          <tr>
+            <td colspan=2><input type='button' id='add_vacation_button' value='Add Vacation Days'></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id='right_container' class='container_divs'>
+    <div id='stats_container'>
+      <span class='label'>Total Vacation Remaining:</span><span id='days_remaining'></span>
+      <br/>
+      <span class='label'>Total Vacation Taken:</span><span id='days_taken'></span>
+      <br/>
+      <br/>
+      <div class='title'>Vacation Days</div>
+      <table id='vdays_table' class='data_table'>
+        <thead>
+          <th>Vacation Start Date</th>
+          <th>Vacation End Date</th>
+          <th>Half Day?</th>
+          <th>Remove Date</th>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+  $(function() {
+    $('#start_calendar').datepicker({
+        showOn: "button",
+			     buttonImage: "/images/calendar.gif",
+        dateFormat: 'yy-mm-dd',
+			     buttonImageOnly: true
+     });
+    $('#end_calendar').datepicker({
+        showOn: "button",
+			     buttonImage: "/images/calendar.gif",
+        dateFormat: 'yy-mm-dd',
+			     buttonImageOnly: true
+     });
+   });
+
+  $('#user_id').change(function() {
+    var year = $('#year').val();
+    $.ajax({
+            url:'/vacation_tracker/get_vacation_days',
+            data:{'year' : year, 'user_id' : $(this).val()},
+            success: function(data) {
+              json = $.parseJSON(data)
+              $('#days_taken').html(json['days_used']);
+              $('#days_remaining').html(json['days_left']);
+              $('#vdays_table tbody').html("");
+              if (json.user_vacation != undefined) {
+                for(var i=0;i<json.user_vacation.length;i++) {
+                    var row = "<tr><td>" + json.user_vacation[i].vstart + "</td><td>" + json.user_vacation[i].vend + "</td><td>" + json.user_vacation[i].half + "</td><td>" + "<a href='javascript:removeVacation(" + json.user_vacation[i].id+ ");'>Remove</a>"+ "</td></tr>";
+                    $('#vdays_table tbody').append(row);
+                }
+              }
+            }
+          })
+  });
+  $('#add_vacation_button').click(function() {
+    var start_date = $('#start_calendar').val()
+    var end_date = $('#end_calendar').val()
+    var user_id = $('#user_id').val();
+    var half_day = $('#half_day_cb').is(':checked');
+    $.ajax({
+            url:'/vacation_tracker/add_vacation_days',
+            data:{'vstart': start_date,
+                  'vend': end_date,
+                  'user_id': user_id,
+                  'half_day': half_day},
+            success: function(data) {
+              if (data != 'SUCCESS') {
+                alert(data);
+              } else {
+                window.location.reload(true);
+              }
+              
+            }
+          })
+   });
+   //Remove vacation day
+  function removeVacation(id) {
+    $.ajax({
+            url:'/vacation_tracker/remove_vacation_day',
+            data:{'id': id},
+            success: function(data) {
+              $('#user_id').change();
+            }
+          });
+  }
+ $(document).ready( function() {
+     var doc_height = $('#main_content').height() - $('#select_employee').height() - 30;
+     $('#left_container')
+        .css('border-right', 'solid 2px gray')
+        .height(doc_height);
+  });
+</script>

@@ -12,11 +12,12 @@
 ActiveRecord::Schema.define(:version => 20120205031436) do
 
   create_table "user_vacations", :force => true do |t|
-    t.integer   "user_id",        :null => false
-    t.date      "vacation_start", :null => false
-    t.date      "vacation_end",   :null => false
-    t.timestamp "created_at",     :null => false
-    t.timestamp "updated_at",     :null => false
+    t.integer   "user_id",                           :null => false
+    t.date      "vacation_start",                    :null => false
+    t.date      "vacation_end",                      :null => false
+    t.boolean   "is_half_day",    :default => false
+    t.timestamp "created_at",                        :null => false
+    t.timestamp "updated_at",                        :null => false
   end
 
   create_table "users", :force => true do |t|

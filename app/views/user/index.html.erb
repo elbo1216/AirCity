@@ -1,0 +1,87 @@
+<% @title = "User Administration" %>
+<div id='search_div' class='search_div'>
+ <table>
+   <tr>
+     <td class='label'>Employee:</td>
+     <td><%= select_tag 'user_id', options_for_select(@user_list) %></td>
+  </table>
+</div>
+<div id='add_user_div' class='add_user_div'>
+  <table>
+   <tr>
+     <td class='label'>First Name</td>
+     <td><%= text_field_tag 'first_name' %></td>
+   </tr>
+   <tr>
+     <td class='label'>Last Name</td>
+     <td><%= text_field_tag 'last_name' %></td>
+   </tr>
+   <tr>
+     <td class='label'>Start Date</td>
+     <td><%= text_field_tag 'start_date' %></td>
+   </tr>
+   <tr>
+     <td colspan=2><input type='button' id='add_user_button' value='Add User' /></td>
+   </tr>
+  </table>
+</div>
+<script>
+  $(function() {
+    $('#start_date').datepicker({
+        showOn: "button",
+			     buttonImage: "/images/calendar.gif",
+        dateFormat: 'yy-mm-dd',
+			     buttonImageOnly: true
+     });
+  });
+
+  // Add User
+  $('#add_user_button').click(function() {
+    var first_name = $('#first_name').val();
+    var last_name = $('#last_name').val();
+    var start_date = $('#start_date').val();
+    $.ajax({
+            url:'/user/add_user',
+            data:{'first_name': first_name,
+                  'last_name': last_name,
+                  'start_date': start_date},
+            success: function(data) {
+              if (data != 'SUCCESS') {
+                alert(data);
+              } else {
+                window.location.reload(true);
+              }
+            }
+          })
+  });
+  //Remove User
+  $('#delete_user_button').click(function() {
+    var user_id = $('#user_id').val();
+    $.ajax({
+            url:'/user/remove_user',
+            data:{'user_id': user_id},
+            success: function(data) {
+              window.location.reload(true);
+            }
+          })
+  });
+
+  //Search user
+  $('#user_id').change(function() {
+    var user_id = $(this).val();
+    $.ajax({
+            url:'/user/find_user',
+            data:{'user_id': user_id},
+            success: function(data) {
+              var user = $.parseJSON(data).user
+              if (user == undefined) {
+                alert("User does not exist.  You may want to refresh this page");
+                return;
+              }
+              $('#first_name').val(user.first_name);
+              $('#last_name').val(user.last_name);
+              $('#start_date').val(user.start_date);
+            }
+          })
+  });
+</script>

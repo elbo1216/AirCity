@@ -1,4 +1,4 @@
-class MainController < ApplicationController
+class VacationTrackerController < ApplicationController
   layout "base_layout"
 
   VACA_DAYS_PER_YEAR = 14
@@ -13,15 +13,17 @@ class MainController < ApplicationController
 
   def get_vacation_days
     user = User.find(params['user_id'])
-    uv = UserVacation.find(:all, :conditions => ['user_id = ? and year(vacation_start) = ?',params['user_id'], params['year']])
-    days_used = uv.map { |u| (u.vacation_end - u.vacation_start).to_i }.sum
-    days_left = user.total_days - days_used
+    user_vacations = UserVacation.find(:all, :conditions => ['user_id = ? and year(vacation_start) = ?',params['user_id'], params['year']])
+    days_used = 0.0
     @user_data = {}
-    uv.each do |row|
+    user_vacations.each do |row|
+      half = row.is_half_day ? "Yes" : "No"
       @user_data["user_vacation"] = [] unless @user_data["user_vacation"]
-      @user_data["user_vacation"] << {"id" => row.id, "vstart" => row.vacation_start, "vend" => row.vacation_end}
+      @user_data["user_vacation"] << {"id" => row.id, "vstart" => row.vacation_start, "vend" => row.vacation_end, "half" => half}
+      days_used += row.days_used
     end
-    @user_data["days_left"] = days_left
+    days_left = user.total_days - days_used
+    @user_data["days_left"] = days_left.to_f
     @user_data["days_used"] = days_used
 
     render :text => @user_data.to_json
@@ -33,11 +35,14 @@ class MainController < ApplicationController
     uv.vacation_end = params["vend"]
     uv.vacation_start = params["vstart"]
     uv.user_id = params['user_id']
+    uv.is_half_day = params['half_day']
 
     ret_val = "SUCCESS"
+    ret_val = "ERROR: Please select a user" if uv.user_id.blank?
     ret_val = "ERROR: Vacation start date cannot be null" if uv.vacation_start.blank?
     ret_val = "ERROR: Vacation end date cannot be null" if uv.vacation_end.blank?
     ret_val = "ERROR: Vacation start is later than vacation end date." if !uv.vacation_start.blank? && !uv.vacation_end.blank? && uv.vacation_start > uv.vacation_end
+    ret_val = "ERROR: Half day can only be used with same start and end days" if uv.is_half_day && uv.vacation_end != uv.vacation_start
     uv.save! if ret_val == 'SUCCESS'
 
     render :text => ret_val 

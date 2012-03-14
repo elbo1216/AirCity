@@ -4,7 +4,9 @@
     <title>AirCity Administrative Tools</title>
       <%= stylesheet_link_tag 'cupertino/jquery-ui-1.8.17.custom' %>
       <%= stylesheet_link_tag 'cupertino/jquery.ui.button' %>
-      <%= stylesheet_link_tag 'main' %>
+      <%= stylesheet_link_tag 'layout' %>
+      <%= stylesheet_link_tag 'vacation_tracker' %>
+      <%= stylesheet_link_tag 'user' %>
 
       <%= javascript_include_tag 'jquery-1.7.1.min' %>
       <%= javascript_include_tag 'jquery-ui-1.8.17.custom.min' %>
@@ -13,7 +15,63 @@
   </head>
   </body>
     <div id='main_content'>
+      <div id='menu_div' class='menu_div'>
+        <div id='menu_button' class='menu_button'/>Menu</div>
+        <div id='menu_list' class='menu_list'>
+          <ul>
+            <a href="user"><li>User Administration</li></a>
+            <a href="vacation_tracker"><li>Vacation Tracker</li></a>
+          </ul>
+        </div>
+      </div>
       <%= yield -%>
     </div>
+    <div class='clear'></div>
+    <div id='footer' class='footer'>
+      <div id='logo_container' class='logo_container'>
+        <img src='images/aircity_logo.png'/>
+      </div>
+      <div class='footer_title'>
+        <span class='main_title'>AirCity Administration Portal</span>
+        <span class='title'><%= @title %></span>
+      </div>
+    </div>
   </body>
+  <script>
+    // Styling
+    var doc_width = $(document).width();
+    var main_height = $(document).height() - $('#footer').height() - 4;
+    $('#main_content').height(main_height);
+    $('#menu_div').css('left', doc_width - 85);
+    $('#menu_list').css('left', - 84);
+
+    // Event Handlers
+    $('#menu_div').hover(function() {
+      $('#menu_list').fadeIn();
+    });
+
+    $('body').click(function() {
+      $('#menu_list').fadeOut();
+    });
+
+  $(':button').each(function() {
+     $(this)
+       .addClass("ui-button ui-state-default ui-corner-all ui-button-text-only")
+       .hover(
+	          function(){ 
+		           $(this).addClass("ui-state-hover"); 
+        	  },
+    	      function(){ 
+    		       $(this).removeClass("ui-state-hover"); 
+           }
+       )
+       .mousedown(function() { 
+		       $(this).addClass("ui-state-active"); 
+    	  })
+	      .mouseup(function(){ 
+		       $(this).removeClass("ui-state-active"); 
+    	  });
+   });
+
+  </script>
 </html>

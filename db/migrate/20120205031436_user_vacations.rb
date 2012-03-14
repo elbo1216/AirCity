@@ -5,6 +5,7 @@ class UserVacations < ActiveRecord::Migration
              user_id          integer not null references users(id),
              vacation_start   date not null,
              vacation_end     date not null,
+             is_half_day      boolean default false,
              created_at       timestamp default '0000-00-00 00:00:00',
              updated_at       timestamp default now() on update now()
 
